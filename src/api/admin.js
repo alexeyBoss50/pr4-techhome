@@ -1,0 +1,15 @@
+import { apiFetch } from './client';
+export const getAdminCategories = () => apiFetch('/admin/categories');
+export const addCategory = (name) => apiFetch('/admin/categories', { method: 'POST', body: JSON.stringify({ name }) });
+export const updateCategory = (name, newName) => apiFetch(`/admin/categories/${encodeURIComponent(name)}`, { method: 'PUT', body: JSON.stringify({ name: newName }) });
+export const deleteCategory = (name) => apiFetch(`/admin/categories/${encodeURIComponent(name)}`, { method: 'DELETE' });
+export const getAdminUsers = () => apiFetch('/admin/users');
+export const updateUserDiscount = (email, personal_discount_percent) => apiFetch(`/admin/users/${encodeURIComponent(email)}/discount`, { method: 'PATCH', body: JSON.stringify({ personal_discount_percent: Number(personal_discount_percent) }) });
+export const getAdminServices = () => apiFetch('/admin/services');
+export const addService = (payload) => apiFetch('/admin/services', { method: 'POST', body: JSON.stringify(payload) });
+export const updateService = (code, payload) => apiFetch(`/admin/services/${encodeURIComponent(code)}`, { method: 'PUT', body: JSON.stringify(payload) });
+export const deleteService = (code) => apiFetch(`/admin/services/${encodeURIComponent(code)}`, { method: 'DELETE' });
+export const getAdminOrders = () => apiFetch('/admin/orders');
+export const updateOrderStatus = (orderNumber, status) => apiFetch(`/admin/orders/${encodeURIComponent(orderNumber)}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
+export const getAdminReviews = () => apiFetch('/admin/reviews');
+export const deleteReview = (code) => apiFetch(`/admin/reviews/${encodeURIComponent(code)}`, { method: 'DELETE' });

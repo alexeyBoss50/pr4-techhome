@@ -1,0 +1,10 @@
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+
+export default function Cart() {
+  const { cart, increaseQuantity, decreaseQuantity, removeFromCart, total, effectiveDiscount, loading } = useCart(); const { user } = useAuth(); const navigate = useNavigate(); const [error, setError] = useState('');
+  async function run(action) { try { setError(''); await action(); } catch (e) { setError(e.message || 'Не удалось изменить корзину'); } }
+  return <main className="page narrow"><div className="page-head"><div><p className="eyebrow">ЗАКАЗ</p><h1>Корзина</h1></div></div>{loading ? <div className="state">Загружаем корзину...</div> : !user ? <div className="empty"><h2>Войдите в аккаунт</h2><p>Корзина хранится на сервере и привязана к вашему пользователю.</p><Link className="primary-btn" to="/login">Войти</Link></div> : !cart.length ? <div className="empty"><h2>Корзина пуста</h2><p>Добавьте услуги из каталога.</p></div> : <>{error && <div className="error-box">{error}</div>}<div className="cart-list">{cart.map(item => { const discount=effectiveDiscount(item); const price=item.price*(1-discount/100); return <div className="cart-item" key={item.service_code}><div className="cart-info"><h3>{item.name}</h3><p>{item.category_name} · {item.duration_minutes} мин. · скидка {discount}%</p></div><div className="quantity"><button onClick={() => run(() => decreaseQuantity(item.service_code))}>−</button><span>{item.quantity}</span><button onClick={() => run(() => increaseQuantity(item.service_code))}>+</button></div><strong className="cart-price">{(price*item.quantity).toLocaleString('ru-RU')} ₽</strong><button className="danger-link" onClick={() => run(() => removeFromCart(item.service_code))}>Удалить</button></div>; })}</div><div className="cart-total"><span>Итого</span><strong>{total.toLocaleString('ru-RU')} ₽</strong></div><button className="primary-btn checkout-btn" onClick={() => navigate('/checkout')}>Оформить заказ</button></> }</main>;
+}
